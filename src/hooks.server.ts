@@ -8,8 +8,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const userId = getSession(event.cookies);
 
 	if (userId) {
-		const users = await db.select().from(userTable).where(eq(userTable.bkey, userId));
-		event.locals.user = users.at(0) ?? null;
+		const res = await db.select().from(userTable).where(eq(userTable.bkey, userId));
+		event.locals.user = res.at(0) ?? null;
 	} else {
 		event.locals.user = null;
 	}
