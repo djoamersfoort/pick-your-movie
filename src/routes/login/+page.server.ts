@@ -1,11 +1,11 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import { createSession } from '$lib/server/session';
 import { toVote } from '$lib/server/redirect';
 import { getUserByName } from '$lib/server/login/queries';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
-	if (locals.user) throw redirect(307, '/vote');
+	if (locals.user) throw toVote();
 };
 
 export const actions: Actions = {
