@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { PageProps } from './$types';
-	import MovieButton from '$lib/components/movie/movie-button.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import LogOutIcon from '@lucide/svelte/icons/log-out';
+	import VoteMovieButton from '$lib/components/movie/vote-movie-button.svelte';
 
 	const { data, form }: PageProps = $props();
 </script>
@@ -34,7 +34,7 @@
 	<form method="POST" use:enhance>
 		<div class="flex flex-wrap justify-center gap-4">
 			{#each data.movies as movie}
-				<MovieButton
+				<VoteMovieButton
 					{movie}
 					formaction={movie.voted ? '?/deregister' : '?/register'}
 					name="movieId"

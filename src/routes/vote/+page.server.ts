@@ -9,7 +9,7 @@ import {
 } from '$lib/server/vote/queries';
 import { maxVotes } from '$lib/server/vote/config';
 import { toLogin } from '$lib/server/redirect';
-import type { UIMovie } from '$lib/server/vote/types';
+import type { VoteMovie } from '$lib/server/vote/types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) throw toLogin();
@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const voteData = await getVotedMovieIds(locals.user.id);
 
 	const age = locals.user.age;
-	const movies = movieData.map<UIMovie>((movie) => ({
+	const movies = movieData.map<VoteMovie>((movie) => ({
 		...movie,
 		voted: voteData.includes(movie.id),
 		appropriate: !movie.ageRating || age >= movie.ageRating

@@ -12,6 +12,9 @@
 
 <div class="flex min-h-screen w-full items-center justify-center p-2">
 	<Card.Root class="w-full max-w-xl">
+		<Card.Header>
+			<Card.Title>Login to start voting</Card.Title>
+		</Card.Header>
 		<Card.Content>
 			<form method="POST" use:enhance>
 				<Field.Group>

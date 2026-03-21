@@ -1,9 +1,21 @@
 import { db } from '$lib/server/db';
 import { movieTable, voteTable } from '$lib/server/db/schema';
-import { and, desc, eq } from 'drizzle-orm';
+import { and, count, desc, eq, getTableColumns, gt } from 'drizzle-orm';
 
 export const getOrderedMovies = () => {
 	return db.select().from(movieTable).orderBy(desc(movieTable.score));
+};
+
+export const getVotedMovies = async () => {
+	return db
+		.select({
+			...getTableColumns(movieTable),
+			votes: count(voteTable.id)
+		})
+		.from(movieTable)
+		.innerJoin(voteTable, eq(voteTable.movieId, movieTable.id))
+		.groupBy(movieTable.id)
+		.orderBy(desc(count(voteTable.id)));
 };
 
 export const getMovieByBkey = async (movieBkey: string) => {

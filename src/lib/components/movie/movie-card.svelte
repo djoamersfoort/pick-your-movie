@@ -2,24 +2,24 @@
 	import StartIcon from '@lucide/svelte/icons/star';
 	import Badge from './badge.svelte';
 	import { getAgeColor } from './ageColor';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
-	import type { UIMovie } from '$lib/server/vote/types';
+	import type { HTMLAttributes } from 'svelte/elements';
+	import type { Movie } from '$lib/server/db/schema';
 
-	const { movie, ...restProps }: { movie: UIMovie } & HTMLButtonAttributes = $props();
+	const {
+		movie,
+		children,
+		class: className,
+		...restProps
+	}: { movie: Movie } & HTMLAttributes<HTMLDivElement> = $props();
 
 	const ageClasses = $derived(getAgeColor(movie.ageRating));
 </script>
 
-<button
+<div
 	class={[
 		'relative w-full max-w-md overflow-hidden rounded-xl border bg-secondary shadow-lg',
-		'transition-all hover:scale-[1.01] hover:-rotate-[0.25deg] hover:brightness-110 odd:hover:rotate-[0.25deg]',
-		{
-			'scale-[1.02]! border-green-500 odd:rotate-[0.5deg]! even:-rotate-[0.5deg]!': movie.voted,
-			'pointer-events-none opacity-20 blur-sm': !movie.appropriate
-		}
+		className
 	]}
-	disabled={!movie.appropriate}
 	{...restProps}
 >
 	<img src={movie.image} alt={movie.title} class="w-full" />
@@ -41,11 +41,5 @@
 		{movie.title}
 	</div>
 
-	<!-- selected outline -->
-	<div
-		class={[
-			'absolute inset-0 h-full w-full bg-green-500/50 opacity-0 transition-opacity',
-			{ 'opacity-100': movie.voted }
-		]}
-	></div>
-</button>
+	{@render children?.()}
+</div>
