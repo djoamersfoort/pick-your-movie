@@ -1,7 +1,8 @@
-import { SESSION_COOKIE } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import type { Cookies } from '@sveltejs/kit';
 
 const path = '/';
+const SESSION_COOKIE = env.SESSION_COOKIE;
 
 export const createSession = (cookies: Cookies, bkey: string) => {
 	cookies.set(SESSION_COOKIE, bkey, {

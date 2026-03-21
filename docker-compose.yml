@@ -1,0 +1,18 @@
+services:
+  pick-your-movie:
+    container_name: 'pick-your-movie'
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - DATABASE_URL=data/local.db
+      - MAX_VOTES=3
+      - SESSION_COOKIE=session
+      - ORIGIN=http://localhost:3000
+    volumes:
+      - 'movie-data:/app/data:rw'
+
+volumes:
+  movie-data:

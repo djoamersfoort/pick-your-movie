@@ -7,7 +7,7 @@ import {
 	getVotedMovieIds,
 	insertVote
 } from '$lib/server/vote/queries';
-import { maxVotes } from '$lib/server/vote/config';
+import { getMaxVotes } from '$lib/server/env';
 import { toLogin } from '$lib/server/redirect';
 import type { VoteMovie } from '$lib/server/vote/types';
 
@@ -26,7 +26,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 	return {
 		user: locals.user,
-		maxVotes,
+		maxVotes: getMaxVotes(),
 		voteCount: voteData.length,
 		movies
 	};
@@ -50,7 +50,7 @@ export const actions: Actions = {
 			return fail(401, { error: 'You are too young!' });
 
 		const votes = await getVotedMovieIds(locals.user.id);
-		if (votes.length >= maxVotes)
+		if (votes.length >= getMaxVotes())
 			return fail(400, { error: 'You have reached your maximum votes.' });
 		if (votes.includes(movie.id))
 			return fail(400, { error: 'You have already voted for that movie.' });
