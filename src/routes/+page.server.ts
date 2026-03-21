@@ -1,6 +1,6 @@
-import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import { toLogin, toVote } from '$lib/server/redirect';
 
 export const load: PageServerLoad = async ({ locals }) => {
-	throw redirect(307, locals.user ? '/vote' : '/login');
+	throw locals.user ? toVote() : toLogin();
 };

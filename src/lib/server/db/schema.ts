@@ -1,4 +1,4 @@
-import { int, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { int, sqliteTable, text, unique } from 'drizzle-orm/sqlite-core';
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 
 export const movieTable = sqliteTable('movie', {
@@ -8,9 +8,11 @@ export const movieTable = sqliteTable('movie', {
 		.notNull()
 		.$defaultFn(() => crypto.randomUUID()),
 
-	title: text('title').notNull(),
-	description: text('description').notNull(),
-	rating: int('rating').notNull()
+	title: text('title').unique().notNull(),
+	image: text('image').notNull(),
+	year: int('year').notNull(),
+	score: int('score').notNull(),
+	ageRating: int('age_rating')
 });
 
 export type Movie = InferSelectModel<typeof movieTable>;
@@ -23,23 +25,27 @@ export const userTable = sqliteTable('user', {
 		.notNull()
 		.$defaultFn(() => crypto.randomUUID()),
 
-	name: text('name').notNull(),
+	name: text('name').unique().notNull(),
 	age: int('age').notNull()
 });
 
 export type User = InferSelectModel<typeof userTable>;
 export type InsertUser = InferInsertModel<typeof userTable>;
 
-export const voteTable = sqliteTable('vote', {
-	id: int('id').primaryKey({ autoIncrement: true }),
-	bkey: text('bkey')
-		.unique()
-		.notNull()
-		.$defaultFn(() => crypto.randomUUID()),
+export const voteTable = sqliteTable(
+	'vote',
+	{
+		id: int('id').primaryKey({ autoIncrement: true }),
+		bkey: text('bkey')
+			.unique()
+			.notNull()
+			.$defaultFn(() => crypto.randomUUID()),
 
-	movieId: int('movie_id').references(() => movieTable.id),
-	userId: int('user_id').references(() => userTable.id)
-});
+		movieId: int('movie_id').references(() => movieTable.id),
+		userId: int('user_id').references(() => userTable.id)
+	},
+	(t) => [unique('vote_movie_user').on(t.movieId, t.userId)]
+);
 
 export type Vote = InferSelectModel<typeof voteTable>;
 export type InsertVote = InferInsertModel<typeof voteTable>;

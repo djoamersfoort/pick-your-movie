@@ -1,5 +1,9 @@
 node_modules
 
+# Local data files
+movies.json
+users.json
+
 # Output
 .output
 .vercel

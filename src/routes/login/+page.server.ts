@@ -1,8 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { db } from '$lib/server/db';
-import { userTable } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
 import { createSession } from '$lib/server/session';
+import { toVote } from '$lib/server/redirect';
+import { getUserByName } from '$lib/server/login/queries';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -19,14 +18,13 @@ export const actions: Actions = {
 		}
 
 		const cleanName = name.trim().toLowerCase();
-		const res = await db.select().from(userTable).where(eq(userTable.name, cleanName));
-		const user = res.at(0);
+		const user = await getUserByName(cleanName);
 
 		if (!user) {
 			return fail(401, { name, error: 'Name not found. Please try again.' });
 		}
 
 		createSession(cookies, user.bkey);
-		throw redirect(307, '/vote');
+		throw toVote();
 	}
 };

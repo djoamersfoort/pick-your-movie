@@ -7,7 +7,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 
-	let { form }: PageProps = $props();
+	const { form }: PageProps = $props();
 </script>
 
 <div class="flex min-h-screen w-full items-center justify-center p-2">
